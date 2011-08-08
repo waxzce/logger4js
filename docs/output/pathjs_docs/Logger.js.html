@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>logger4js API Documentation</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css?stamp=1312801120.64" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css?stamp=1312801120.64" />
+
+    <script type="text/javascript" src="assets/api-js?stamp=1312801120.64"></script>
+    <script type="text/javascript" src="assets/ac-js?stamp=1312801120.64"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://www.waxzce.org" title="logger4js">logger4js</a></h1>
+        <h3>logger4js&nbsp; <span class="subtitle">1</span></h3>
+        <a href="./index.html" title="logger4js">logger4js</a> 
+            &gt; <a href="./module_logger4js.html" title="logger4js">logger4js</a>
+                
+                 &gt; Logger.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * @module logger4js</span>
+<span class="cm"> */</span>
+<span class="kd">var</span> <span class="nx">Logger</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">	* class for managing logs</span>
+<span class="cm">	* &lt;br/&gt; NB : some method are generated </span>
+<span class="cm">	* &lt;br/&gt; method name : level (like info, warning, error...)</span>
+<span class="cm">	* &lt;br/&gt; 2 params : txt to log, obj, to log</span>
+<span class="cm">	* @class Logger</span>
+<span class="cm">	* @param lvl {number} the actual level of logging</span>
+<span class="cm">	* @param loggerimpl {object} an implementation of LoggerImpl : the object use to log</span>
+<span class="cm">	* @param levels {object} an occurence of Levels : the definition of logging level</span>
+<span class="cm">	* @constructor</span>
+<span class="cm">	**/</span>
+    <span class="kd">var</span> <span class="nx">Logger</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lvl</span><span class="p">,</span> <span class="nx">loggerimpl</span><span class="p">,</span> <span class="nx">levels</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">initialize</span><span class="p">(</span><span class="nx">lvl</span><span class="p">,</span> <span class="nx">loggerimpl</span><span class="p">,</span> <span class="nx">levels</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">var</span> <span class="nx">p</span> <span class="o">=</span> <span class="nx">Logger</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+
+    <span class="c1">// constructor:</span>
+    <span class="cm">/** </span>
+<span class="cm">	* @description Initialization method.</span>
+<span class="cm">	* @method initialize</span>
+<span class="cm">	* @param lvl {number} the actual level of logging</span>
+<span class="cm">	* @param loggerimpl {object} an implementation of LoggerImpl : the object use to log</span>
+<span class="cm">	* @param levels {object} an occurence of Levels : the definition of logging level</span>
+<span class="cm">	* @protected</span>
+<span class="cm">	**/</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">initialize</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lvl</span><span class="p">,</span> <span class="nx">loggerimpl</span><span class="p">,</span> <span class="nx">levels</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">loggerimpl</span> <span class="o">=</span> <span class="nx">loggerimpl</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">actualLvl</span> <span class="o">=</span> <span class="nx">lvl</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">levels</span> <span class="o">=</span> <span class="nx">levels</span><span class="p">;</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">f</span> <span class="k">in</span> <span class="nx">levels</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">[</span><span class="nx">f</span><span class="p">]</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_log_wrapper</span><span class="p">(</span><span class="nx">levels</span><span class="p">[</span><span class="nx">f</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="c1">// public methods:</span>
+    <span class="cm">/**</span>
+<span class="cm">	* @description log something - NB : use the generated log level named mathod in the most case</span>
+<span class="cm">	* @param lvl {number} the level of the log. normal way is using the Levels function.</span>
+<span class="cm">	* @param what {string} the content you want to log</span>
+<span class="cm">	* @param obj {object} content you want to log -&gt; an object</span>
+<span class="cm">	* @method log</span>
+<span class="cm">	**/</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">log</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lvl</span><span class="p">,</span> <span class="nx">what</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">lvl</span> <span class="o">&gt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">actualLvl</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">loggerimpl</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">what</span><span class="p">,</span> <span class="nx">lvl</span><span class="p">,</span> <span class="p">(</span><span class="nx">obj</span> <span class="o">?</span> <span class="nx">obj</span><span class="o">:</span> <span class="kc">null</span><span class="p">),</span> <span class="k">this</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="cm">/**</span>
+<span class="cm">	* @description wrapper for logging - private</span>
+<span class="cm">	* @param lvl {function} the level of the wrapper function (usualy a function of Levels)</span>
+<span class="cm">	* @method _log_wrapper</span>
+<span class="cm">	* @private</span>
+<span class="cm">	* @return {function} a generated function for logging with the good level</span>
+<span class="cm">	**/</span>
+    <span class="nx">p</span><span class="p">.</span><span class="nx">_log_wrapper</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">lvl</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">lvl</span> <span class="o">=</span> <span class="nx">lvl</span><span class="p">;</span>
+        <span class="k">return</span> <span class="kd">function</span><span class="p">(</span><span class="nx">what</span><span class="p">,</span> <span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">lvl</span><span class="p">(),</span> <span class="nx">what</span><span class="p">,</span> <span class="nx">obj</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+    <span class="k">return</span> <span class="nx">Logger</span><span class="p">;</span>
+<span class="p">})();</span>
+</pre></div>
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_logger4js.html" title="logger4js">logger4js</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="DefaultLoggerImpl.html" title="DefaultLoggerImpl">DefaultLoggerImpl</a></li>
+                                <li class=""><a href="Levels.html" title="Levels">Levels</a></li>
+                                <li class=""><a href="Logger.html" title="Logger">Logger</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="bindings.js.html" title="bindings.js">bindings.js</a></li>
+                                <li class=""><a href="DefaultLoggerImpl.js.html" title="DefaultLoggerImpl.js">DefaultLoggerImpl.js</a></li>
+                                <li class=""><a href="Levels.js.html" title="Levels.js">Levels.js</a></li>
+                                <li class="selected"><a href="Logger.js.html" title="Logger.js">Logger.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	
+	<!--footer-->
+	<!--
+	<div id="ft">
+        <hr />
+	</div>
+	-->
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "Levels.html#method_getName", "access": "", "host": "Levels", "type": "method", "name": "getName"}, {"url": "DefaultLoggerImpl.html#method_initialize", "access": "protected", "host": "DefaultLoggerImpl", "type": "method", "name": "initialize"}, {"url": "Levels.html#method_initialize", "access": "protected", "host": "Levels", "type": "method", "name": "initialize"}, {"url": "Logger.html#method_initialize", "access": "protected", "host": "Logger", "type": "method", "name": "initialize"}, {"url": "DefaultLoggerImpl.html#method_log", "access": "", "host": "DefaultLoggerImpl", "type": "method", "name": "log"}, {"url": "Logger.html#method_log", "access": "", "host": "Logger", "type": "method", "name": "log"}];
+</script>
+</body>
+</html>
