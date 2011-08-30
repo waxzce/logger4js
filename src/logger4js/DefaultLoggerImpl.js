@@ -36,7 +36,7 @@ var DefaultLoggerImpl = (function() {
             if (obj != null) {
                 console.log('--------------')
             }
-            console.log(logger.levels.getName(lvl) + ' : ' + what);
+            console.log(logger.name + ' :: ' + logger.levels.getName(lvl) + ' : ' + what);
             if (obj != null) {
                 console.log(obj);
                 console.log('--^--^--^--^--')

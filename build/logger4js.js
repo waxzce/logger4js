@@ -23,8 +23,8 @@ var Logger = (function() {
 	* @param levels {object} an occurence of Levels : the definition of logging level
 	* @constructor
 	**/
-    var Logger = function(lvl, loggerimpl, levels) {
-        this.initialize(lvl, loggerimpl, levels);
+    var Logger = function(options) {
+        this.initialize(options);
     }
     var p = Logger.prototype;
 
@@ -37,13 +37,14 @@ var Logger = (function() {
 	* @param levels {object} an occurence of Levels : the definition of logging level
 	* @protected
 	**/
-    p.initialize = function(lvl, loggerimpl, levels) {
-        this.loggerimpl = loggerimpl;
-        this.actualLvl = lvl;
-        this.levels = levels;
+    p.initialize = function(options) {
+        this.loggerimpl = options.loggerimpl || new DefaultLoggerImpl();
+        this.levels = options.levels || new Levels(['trace', 'debug', 'info', 'warning', 'error']); 
+        this.actualLvl = options.actualLvl || 0;
+		this.name = options.name || 'AnonimousLogger';
 
-        for (var f in levels) {
-            this[f] = this._log_wrapper(levels[f]);
+        for (var f in this.levels) {
+            this[f] = this._log_wrapper(this.levels[f]);
         }
     };
     // public methods:
@@ -72,6 +73,18 @@ var Logger = (function() {
             this.log(lvl(), what, obj);
         }
     };
+
+	/**
+	* @description load a configuration part for the logger
+	* @param conf {object} an object show the configuration
+	* @method loadConfiguration
+	**/
+    p.loadConfiguration = function(conf) {
+        // actual level
+		// noup
+		// loggerimpl
+    };
+
     return Logger;
 })(); 
 /**
@@ -170,7 +183,7 @@ var DefaultLoggerImpl = (function() {
             if (obj != null) {
                 console.log('--------------')
             }
-            console.log(logger.levels.getName(lvl) + ' : ' + what);
+            console.log(logger.name + ' :: ' + logger.levels.getName(lvl) + ' : ' + what);
             if (obj != null) {
                 console.log(obj);
                 console.log('--^--^--^--^--')
@@ -179,7 +192,7 @@ var DefaultLoggerImpl = (function() {
     };
     return DefaultLoggerImpl;
 })(); 
-var log = new Logger(0, new DefaultLoggerImpl(), new Levels(['debug', 'info', 'warning', 'error', 'none']));
+var log = new Logger({name:"DefaultLogger"});
 
 for (var y in log){
 	exports[y] = log[y];
