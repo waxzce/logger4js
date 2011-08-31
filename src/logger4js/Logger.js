@@ -37,7 +37,6 @@ var Logger = (function() {
             MainLogger.loggers[this.name] = this;
         }
         this.loggerimpl = options.loggerimpl || new DefaultLoggerImpl();
-		console.log(this.name +' '+typeof options.levels);
         this.levels = (options.levels == undefined ? new Levels(['trace', 'debug', 'info', 'warning', 'error']) : (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels));
         this.actualLvl = options.actualLvl ||  0;
 
@@ -79,10 +78,10 @@ var Logger = (function() {
 	* @method loadConfiguration
 	**/
     p.loadConfiguration = function(conf) {
-        // actual level
-        // noup
-        // loggerimpl
-        };
+        for (var n in conf) {
+            MainLogger.conf[n] = conf[n];
+        }
+    };
 
     return Logger;
 })();

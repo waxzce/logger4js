@@ -32,7 +32,7 @@ var DefaultLoggerImpl = (function() {
 	* @method log
 	**/
     pp.log = function(what, lvl, obj, logger) {
-        if (console) {
+        if (console != undefined) {
             if (obj != null) {
                 console.log('--------------')
             }
