@@ -9,6 +9,16 @@ modules['logger4js'] = function(require, exports) {
 /**
  * @module logger4js
  */
+var MainLogger = {
+	loggers : {},
+    named : function(name, options){
+		return MainLogger.loggers[name];
+	},
+
+}; 
+/**
+ * @module logger4js
+ */
 var Logger = (function() {
 
 
@@ -38,14 +48,21 @@ var Logger = (function() {
 	* @protected
 	**/
     p.initialize = function(options) {
+        this.name = options.name ||  'AnonymousLogger';
+        if (MainLogger.loggers[this.name] != undefined) {
+            return MainLogger.loggers[this.name];
+        } else {
+            MainLogger.loggers[this.name] = this;
+        }
         this.loggerimpl = options.loggerimpl || new DefaultLoggerImpl();
-        this.levels = options.levels || new Levels(['trace', 'debug', 'info', 'warning', 'error']); 
-        this.actualLvl = options.actualLvl || 0;
-		this.name = options.name || 'AnonimousLogger';
+		console.log(this.name +' '+typeof options.levels);
+        this.levels = (options.levels == undefined ? new Levels(['trace', 'debug', 'info', 'warning', 'error']) : (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels));
+        this.actualLvl = options.actualLvl ||  0;
 
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
         }
+
     };
     // public methods:
     /**
@@ -74,16 +91,16 @@ var Logger = (function() {
         }
     };
 
-	/**
+    /**
 	* @description load a configuration part for the logger
 	* @param conf {object} an object show the configuration
 	* @method loadConfiguration
 	**/
     p.loadConfiguration = function(conf) {
         // actual level
-		// noup
-		// loggerimpl
-    };
+        // noup
+        // loggerimpl
+        };
 
     return Logger;
 })(); 
@@ -196,6 +213,10 @@ var log = new Logger({name:"DefaultLogger"});
 
 for (var y in log){
 	exports[y] = log[y];
+}
+
+for (var y in MainLogger){
+	exports[y] = MainLogger[y];
 }
 
 exports.Logger = Logger;

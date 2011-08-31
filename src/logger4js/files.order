@@ -1,1 +1,1 @@
-Logger.js Levels.js DefaultLoggerImpl.js bindings.js
+MainLogger.js Logger.js Levels.js DefaultLoggerImpl.js bindings.js
