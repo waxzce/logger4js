@@ -9,18 +9,75 @@ modules['logger4js'] = function(require, exports) {
 /**
  * @module logger4js
  */
+var DefaultLoggerImpl = (function() {
+
+
+
+    /**
+	* class LoggerImpl : log with console.log
+	* @class DefaultLoggerImpl
+	* @constructor
+	**/
+    DefaultLoggerImpl = function() {
+        this.initialize();
+    }
+    var pp = DefaultLoggerImpl.prototype;
+    // constructor:
+    /** 
+	* @description Initialization method.
+	* @method initialize
+	* @protected
+	**/
+    pp.initialize = function() {
+        };
+    // public methods:
+    /**
+	* @description log something
+	* @param what {string} the content you want to log
+	* @param lvl {number} the level of the log. normal way is using the Levels function.
+	* @param obj {object} content you want to log -> an object
+	* @param logger {object} the Logger occurence -> use to know
+	* @method log
+	**/
+    pp.log = function(what, lvl, obj, logger) {
+        if (console != undefined) {
+            if (obj != null) {
+                console.log('--------------')
+            }
+            console.log(logger.name + ' :: ' + logger.levels.getName(lvl) + ' : ' + what);
+            if (obj != null) {
+                console.log(obj);
+                console.log('--^--^--^--^--')
+            }
+        }
+    };
+    return DefaultLoggerImpl;
+})(); 
+/**
+ * @module logger4js
+ */
 var MainLogger = {
     loggers: {},
     named: function(name, options) {
         if (MainLogger.loggers[name] == undefined) {
             if (MainLogger.conf[name] == undefined) {
-                return MainLogger.named('default');
+                new Logger({
+                    'name': name
+                });
+            } else {
+                new Logger(MainLogger.conf[name]);
             }
-            new Logger(MainLogger.conf[name]);
         }
         return MainLogger.loggers[name];
     },
-    conf: {}
+    conf: {
+        'default': {
+            loggerimpl: new DefaultLoggerImpl(),
+            levels: ['trace', 'debug', 'info', 'warning', 'error'],
+            actualLvl:  0,
+            noprint: false
+        }
+    }
 }; 
 /**
  * @module logger4js
@@ -60,10 +117,20 @@ var Logger = (function() {
         } else {
             MainLogger.loggers[this.name] = this;
         }
+        var o = {};
+        var d = MainLogger.conf['default'];
+        for (var p in d) {
+            o[p] = options[p] || d[p];
+        }
+
+        this.loggerimpl = o.loggerimpl;
+        this.levels = (o.levels.lvls == undefined ? new Levels(o.levels) : o.levels);
+        this.actualLvl = o.actualLvl;
+        /*
         this.loggerimpl = options.loggerimpl || new DefaultLoggerImpl();
         this.levels = (options.levels == undefined ? new Levels(['trace', 'debug', 'info', 'warning', 'error']) : (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels));
         this.actualLvl = options.actualLvl ||  0;
-
+*/
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
         }
@@ -166,53 +233,6 @@ var Levels = (function() {
         }
     };
     return Levels;
-})(); 
-/**
- * @module logger4js
- */
-var DefaultLoggerImpl = (function() {
-
-
-
-    /**
-	* class LoggerImpl : log with console.log
-	* @class DefaultLoggerImpl
-	* @constructor
-	**/
-    DefaultLoggerImpl = function() {
-        this.initialize();
-    }
-    var pp = DefaultLoggerImpl.prototype;
-    // constructor:
-    /** 
-	* @description Initialization method.
-	* @method initialize
-	* @protected
-	**/
-    pp.initialize = function() {
-        };
-    // public methods:
-    /**
-	* @description log something
-	* @param what {string} the content you want to log
-	* @param lvl {number} the level of the log. normal way is using the Levels function.
-	* @param obj {object} content you want to log -> an object
-	* @param logger {object} the Logger occurence -> use to know
-	* @method log
-	**/
-    pp.log = function(what, lvl, obj, logger) {
-        if (console != undefined) {
-            if (obj != null) {
-                console.log('--------------')
-            }
-            console.log(logger.name + ' :: ' + logger.levels.getName(lvl) + ' : ' + what);
-            if (obj != null) {
-                console.log(obj);
-                console.log('--^--^--^--^--')
-            }
-        }
-    };
-    return DefaultLoggerImpl;
 })(); 
 var log = new Logger({name:"DefaultLogger"});
 

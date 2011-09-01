@@ -27,13 +27,14 @@ $(function() {
     log.error('an error logged');
     log.actualLvl = 0;
     log.info('now try to work with configuration');
-
+/*
     log.loadConfiguration({
         'default': {
             name: 'default',
             levels: ['trace', 'debug', 'info', 'warning', 'error']
         }
     });
+*/
     var logfromname = log.named('piano');
 
 	logfromname.info('log from log for name');

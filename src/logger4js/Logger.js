@@ -36,10 +36,20 @@ var Logger = (function() {
         } else {
             MainLogger.loggers[this.name] = this;
         }
+        var o = {};
+        var d = MainLogger.conf['default'];
+        for (var p in d) {
+            o[p] = options[p] || d[p];
+        }
+
+        this.loggerimpl = o.loggerimpl;
+        this.levels = (o.levels.lvls == undefined ? new Levels(o.levels) : o.levels);
+        this.actualLvl = o.actualLvl;
+        /*
         this.loggerimpl = options.loggerimpl || new DefaultLoggerImpl();
         this.levels = (options.levels == undefined ? new Levels(['trace', 'debug', 'info', 'warning', 'error']) : (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels));
         this.actualLvl = options.actualLvl ||  0;
-
+*/
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
         }
