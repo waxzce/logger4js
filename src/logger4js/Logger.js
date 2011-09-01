@@ -10,9 +10,7 @@ var Logger = (function() {
 	* <br/> method name : level (like info, warning, error...)
 	* <br/> 2 params : txt to log, obj, to log
 	* @class Logger
-	* @param lvl {number} the actual level of logging
-	* @param loggerimpl {object} an implementation of LoggerImpl : the object use to log
-	* @param levels {object} an occurence of Levels : the definition of logging level
+	* @param options {object} an object with all the params of logger
 	* @constructor
 	**/
     var Logger = function(options) {
@@ -24,9 +22,7 @@ var Logger = (function() {
     /** 
 	* @description Initialization method.
 	* @method initialize
-	* @param lvl {number} the actual level of logging
-	* @param loggerimpl {object} an implementation of LoggerImpl : the object use to log
-	* @param levels {object} an occurence of Levels : the definition of logging level
+	* @param options {object} an object with all the params of logger
 	* @protected
 	**/
     p.initialize = function(options) {
@@ -36,20 +32,18 @@ var Logger = (function() {
         } else {
             MainLogger.loggers[this.name] = this;
         }
+        /*
         var o = {};
         var d = MainLogger.conf['default'];
         for (var p in d) {
             o[p] = options[p] || d[p];
         }
-
+*/
+        var o = mergeConf(options, MainLogger.conf['default']);
         this.loggerimpl = o.loggerimpl;
         this.levels = (o.levels.lvls == undefined ? new Levels(o.levels) : o.levels);
         this.actualLvl = o.actualLvl;
-        /*
-        this.loggerimpl = options.loggerimpl || new DefaultLoggerImpl();
-        this.levels = (options.levels == undefined ? new Levels(['trace', 'debug', 'info', 'warning', 'error']) : (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels));
-        this.actualLvl = options.actualLvl ||  0;
-*/
+
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
         }
@@ -79,17 +73,6 @@ var Logger = (function() {
         var lvl = lvl;
         return function(what, obj) {
             this.log(lvl(), what, obj);
-        }
-    };
-
-    /**
-	* @description load a configuration part for the logger
-	* @param conf {object} an object show the configuration
-	* @method loadConfiguration
-	**/
-    p.loadConfiguration = function(conf) {
-        for (var n in conf) {
-            MainLogger.conf[n] = conf[n];
         }
     };
 

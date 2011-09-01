@@ -1,19 +1,31 @@
 /**
  * @module logger4js
  */
+
+
 var MainLogger = {
     loggers: {},
     named: function(name, options) {
+        if (options != undefined) {
+            MainLogger.conf[name] = (MainLogger.conf[name] == undefined ? options: mergeConf(options, MainLogger.conf[name]));
+        }
         if (MainLogger.loggers[name] == undefined) {
             if (MainLogger.conf[name] == undefined) {
                 new Logger({
                     'name': name
                 });
             } else {
-                new Logger(MainLogger.conf[name]);
+                new Logger(mergeConf(MainLogger.conf[name], {
+                    'name': name
+                }));
             }
         }
         return MainLogger.loggers[name];
+    },
+    loadConfiguration: function(conf) {
+        for (var n in conf) {
+            MainLogger.conf[n] = conf[n];
+        }
     },
     conf: {
         'default': {
@@ -24,3 +36,5 @@ var MainLogger = {
         }
     }
 };
+
+MainLogger.loadConf = MainLogger.loadConfiguration;
