@@ -75,6 +75,14 @@ var Logger = (function() {
             this.log(lvl(), what, obj);
         }
     };
+    /**
+	* @description get the configuration of the logger
+	* @method getConf
+	* @return {object} the configuration of the logger
+	**/
+    p.getConf = function() {
+        return MainLogger.conf[this.name];
+    }
 
     return Logger;
 })();
