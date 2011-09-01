@@ -22,39 +22,39 @@ $(function() {
     var log = require('logger4js').named('app.management');
     log.info('is it working ?');
     log.warning('log from a named logger');
-	// consideration about name for logger :
-	// use a name design for different configuration, like <framework_name>.<functional_part>
+    // consideration about name for logger :
+    // use a name design for different configuration, like <framework_name>.<functional_part>
     // ----------------------------
     // STEP 3 :
     // logger configuration
     // you can params logs : optional param to the named function
-	// NB : later we see a list of params possible
+    // NB : later we see a list of params possible
     var clog = logger4js.named('app.clog', {
-		// levels of logging
+        // levels of logging
         levels: ['alot', 'some', 'little']
     });
-	clog.alot('a lot log');
-	clog.some('some log');
-	clog.little('little log');
-	// the problem with this method is about app design : configuration and code are mix :(
-	// so we can add configuration independently	
-	logger4js.loadConf({
+    clog.alot('a lot log');
+    clog.some('some log');
+    clog.little('little log');
+    // the problem with this method is about app design : configuration and code are mix :(
+    // so we can add configuration independently	
+    logger4js.loadConf({
         'app.clog2': {
             levels: ['_1st', '_2de', 'third']
         }
     });
-	// the logger configuration is retrieve when you get the named logger
-	// THIS IS THE GOOD WAY
-	var clog2 = logger4js.named('app.clog2');
-	clog2._1st('log from clog2');
-	// ----------------------------
-	// STEP 4 : custom logger implementation
-	// logger4js is design to provide logger infrasructure for all js project, so you can write your own loggerimpl
-	// basicly is just an object with a log function and 4 params :
-	// what : text of the log
-	// lvl : number, the lvl of the log
-	// object : an object to log, can be null
-	// logger : Logger who call the log
+    // the logger configuration is retrieve when you get the named logger
+    // THIS IS THE GOOD WAY
+    var clog2 = logger4js.named('app.clog2');
+    clog2._1st('log from clog2');
+    // ----------------------------
+    // STEP 4 : custom logger implementation
+    // logger4js is design to provide logger infrasructure for all js project, so you can write your own loggerimpl
+    // basicly is just an object with a log function and 4 params :
+    // what : text of the log
+    // lvl : number, the lvl of the log
+    // object : an object to log, can be null
+    // logger : Logger who call the log
     // this is a dummy loggerimpl just for demo
     var AnnotherLoggerImpl = (function() {
         AnnotherLoggerImpl = function() {
@@ -77,7 +77,7 @@ $(function() {
         };
         return AnnotherLoggerImpl;
     })();
-	// we load a conf for add this logger implementation to a named logger
+    // we load a conf for add this logger implementation to a named logger
     logger4js.loadConf({
         'app.customloggerimpl': {
             loggerimpl: new AnnotherLoggerImpl()
@@ -85,7 +85,16 @@ $(function() {
     });
     var log2 = logger4js.named('app.customloggerimpl');
     log2.error('this is sparta');
-	// ----------------------------
-	// STEP 5 : learn about default conf
+    // ----------------------------
+    // STEP 5 : learn about default conf
+    // this is the default conf :
+    var conf = {
+        'default': {
+            loggerimpl: new logger4js.DefaultLoggerImpl(), // The logger implementation you want to use
+            levels: ['trace', 'debug', 'info', 'warning', 'error'], // the levels of logging (can be a Levels intance or an array of string)
+            actualLvl:  0, // the actual logging visibility (can be string of number)
+            noprint: false // set to true to disable logging for this log (use for production)
+        }
+    };
 
 });

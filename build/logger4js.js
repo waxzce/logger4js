@@ -86,7 +86,9 @@ var MainLogger = {
     },
     loadConfiguration: function(conf) {
         for (var n in conf) {
-            MainLogger.conf[n] = conf[n];
+            var name = n;
+			var options = conf[n];
+            MainLogger.conf[name] = (MainLogger.conf[name] == undefined ? options: mergeConf(options, MainLogger.conf[name]));
         }
     },
     conf: {
