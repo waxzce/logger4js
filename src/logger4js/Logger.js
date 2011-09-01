@@ -32,17 +32,10 @@ var Logger = (function() {
         } else {
             MainLogger.loggers[this.name] = this;
         }
-        /*
-        var o = {};
-        var d = MainLogger.conf['default'];
-        for (var p in d) {
-            o[p] = options[p] || d[p];
-        }
-*/
         var o = mergeConf(options, MainLogger.conf['default']);
         this.loggerimpl = o.loggerimpl;
         this.levels = (o.levels.lvls == undefined ? new Levels(o.levels) : o.levels);
-        this.actualLvl = o.actualLvl;
+        this.actualLvl = (typeof o.actualLvl == 'number' ? o.actualLvl: this.levels[o.actualLvl]());
 
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
