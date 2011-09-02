@@ -12,7 +12,7 @@ var MainLogger = {
             MainLogger.loadConfiguration(o);
         }
         if (MainLogger.loggers[name] == undefined) {
-            new Logger(MainLogger.getComputedConf(name, {
+            MainLogger.loggers[name] = new Logger(MainLogger.getComputedConf(name, {
                 'name': name
             }));
         }
@@ -23,6 +23,14 @@ var MainLogger = {
             var name = n;
             var options = conf[n];
             MainLogger.conf[name] = (MainLogger.conf[name] == undefined ? options: mergeConf(options, MainLogger.conf[name]));
+            var isdefault = (name == 'default');
+            for (var l in MainLogger.loggers) {
+                if (l.indexOf(name) == 0 || isdefault) {
+                    MainLogger.loggers[l].switchwith(new Logger(MainLogger.getComputedConf(l, {
+                        'name': l
+                    })));
+                }
+            }
         }
     },
     getComputedConf: function(name, moreoptions) {

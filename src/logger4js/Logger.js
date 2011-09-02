@@ -27,11 +27,6 @@ var Logger = (function() {
 	**/
     p.initialize = function(options) {
         this.name = options.name ||  'AnonymousLogger';
-        if (MainLogger.loggers[this.name] != undefined) {
-            return MainLogger.loggers[this.name];
-        } else {
-            MainLogger.loggers[this.name] = this;
-        }
         this.loggerimpl = options.loggerimpl;
         this.levels = (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels);
         this.actualLvl = (typeof options.actualLvl == 'number' ? options.actualLvl: this.levels[options.actualLvl]());
@@ -75,13 +70,37 @@ var Logger = (function() {
     p.getConf = function() {
         return MainLogger.conf[this.name];
     }
-	/**
+    /**
 	* @description get the computed configuration of the logger - use this to know the real configuration
 	* @method getCConf
 	* @return {object} the real configuration of the logger
 	**/
     p.getCConf = function() {
         return MainLogger.getComputedConf(this.name);
+    }
+
+    /**
+	* @description shortcut to load a configuration as a mainLogger
+	* @method loadConf
+	* @param conf {object} conf object you want to load
+	**/
+    p.loadConf = function(conf) {
+        return MainLogger.loadConfiguration(conf);
+    }
+
+    /**
+	* @description shortcut for loadConf
+	* @method loadConfiguration
+	* @param conf {object} conf object you want to load
+	**/
+    p.loadConfiguration = p.loadConf;
+    p.switchwith = function(l) {
+        for (var f in this) {
+            delete this[f];
+        }
+        for (var f in l) {
+            this[f] = l[f];
+        }
     }
 
     return Logger;

@@ -22,8 +22,6 @@ $(function() {
     var log = require('logger4js').named('app.management');
     log.info('is it working ?');
     log.warning('log from a named logger');
-    // consideration about name for logger :
-    // use a name design for different configuration, like <framework_name>.<functional_part>
     // ----------------------------
     // STEP 3 :
     // logger configuration
@@ -45,6 +43,11 @@ $(function() {
     });
     // the logger configuration is retrieve when you get the named logger
     // THIS IS THE GOOD WAY
+    // NB : you can load a configuration from any logger, it's a shortcut
+    // consideration about name for logger :
+    // use a name design for different configuration, like <framework_name>.<functional_part>
+    // about configuration process :
+    // if you have 2 logger named fmkname.process1 and fmkname.process2 you can use fmkname to configure common things
     var clog2 = logger4js.named('app.clog2');
     clog2._1st('log from clog2');
     // ----------------------------
@@ -63,7 +66,7 @@ $(function() {
         var pp = AnnotherLoggerImpl.prototype;
         pp.initialize = function() {
             };
-		pp.loggerimplname = "custom";
+        pp.loggerimplname = "custom";
         pp.log = function(what, lvl, obj, logger) {
             if (console != undefined) {
                 if (obj != null) {
@@ -91,25 +94,31 @@ $(function() {
     // this is the default conf :
     var conf = {
         'default': {
-            loggerimpl: new logger4js.DefaultLoggerImpl(), // The logger implementation you want to use
-            levels: ['trace', 'debug', 'info', 'warning', 'error'], // the levels of logging (can be a Levels intance or an array of string)
-            actualLvl:  0, // the actual logging visibility (can be string of number)
-            noprint: false // set to true to disable logging for this log (use for production)
+            loggerimpl: new logger4js.DefaultLoggerImpl(),
+            // The logger implementation you want to use
+            levels: ['trace', 'debug', 'info', 'warning', 'error'],
+            // the levels of logging (can be a Levels intance or an array of string)
+            actualLvl:  0,
+            // the actual logging visibility (can be string of number)
+            noprint: false
+            // set to true to disable logging for this log (use for production)
         }
     };
-	// when you add some conf to a logger, default conf params are added
-	
-	logger4js.loadConf({
+    // when you add some conf to a logger, default conf params are added
+    // then the package conf are added
+    // and at last precise logger configuration
+    // when the configuration change, logger affected are rebuilt
+    logger4js.loadConf({
+        'default': {
+            loggerimpl: new AnnotherLoggerImpl()
+        }
+    });
+    clog.alot('now logged from alternative logger');
+    logger4js.loadConf({
         'app': {
-            actualLvl: 1
+            loggerimpl: new logger4js.DefaultLoggerImpl()
         }
     });
-	logger4js.loadConf({
-        'app.b': {
-            actualLvl: 2
-        }
-    });
-	console.log(logger4js.getComputedConf('app.customloggerimpl'));
-	console.log(logger4js.getComputedConf('app.d'));
-
+    clog.alot('now from classic logger');
+    logger4js.loadConf(conf);
 });
