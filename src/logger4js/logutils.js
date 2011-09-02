@@ -4,7 +4,7 @@ var mergeConf = function(no, oo) {
 		o[p] = no[p];
 	}
     for (var p in oo) {
-        o[p] = no[p] || oo[p];
+        o[p] = (no[p] != undefined ? no[p] : oo[p]);
     }
     return o;
 };

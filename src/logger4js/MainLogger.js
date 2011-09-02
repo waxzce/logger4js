@@ -46,6 +46,13 @@ var MainLogger = {
         cconf = mergeConf(cconf, MainLogger.conf['default']);
         return cconf;
     },
+    noprint: function() {
+        MainLogger.loadConf({
+            'default': {
+                noprint: true
+            }
+        });
+    },
     conf: {
         'default': {
             loggerimpl: new DefaultLoggerImpl(),

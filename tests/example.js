@@ -128,12 +128,16 @@ $(function() {
     // you can add someting to your conf to use it in your loggerimpl
     // ----------------------------
     // STEP 6 : production use and noprint
-    logger4js.loadConf({
-        'default': {
-            noprint: true
-        }
-    });
+	// use noprint function on logger4js for production usage
+	// or just define noprint:true on default
+    logger4js.noprint();
     clog2._1st('you can\'t see me');
 	logger4js.info('me neither');
 	log.error('not visible');
+	logger4js.loadConf({
+        'default': {
+            noprint: false
+        }
+    });
+	log.info('you know how to use now :-)');
 });
