@@ -30,11 +30,17 @@ var Logger = (function() {
         this.loggerimpl = options.loggerimpl;
         this.levels = (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels);
         this.actualLvl = (typeof options.actualLvl == 'number' ? options.actualLvl: this.levels[options.actualLvl]());
-
-        for (var f in this.levels) {
-            this[f] = this._log_wrapper(this.levels[f]);
+        this.noprint = options.noprint;
+        if (this.noprint) {
+            this.log = function() {};
+            for (var f in this.levels) {
+                this[f] = function() {};
+            }
+        } else {
+            for (var f in this.levels) {
+                this[f] = this._log_wrapper(this.levels[f]);
+            }
         }
-
     };
     // public methods:
     /**
@@ -94,6 +100,12 @@ var Logger = (function() {
 	* @param conf {object} conf object you want to load
 	**/
     p.loadConfiguration = p.loadConf;
+    /**
+	* @description change current logger for another - private
+	* @param l {object} the new Logger
+	* @method switchwith
+	* @private
+	**/
     p.switchwith = function(l) {
         for (var f in this) {
             delete this[f];
@@ -101,6 +113,10 @@ var Logger = (function() {
         for (var f in l) {
             this[f] = l[f];
         }
+    }
+
+    p.killLogger = function() {
+        this.log = function() {};
     }
 
     return Logger;

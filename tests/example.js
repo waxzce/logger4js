@@ -121,4 +121,19 @@ $(function() {
     });
     clog.alot('now from classic logger');
     logger4js.loadConf(conf);
+    logger4js.loadConf({
+        'app': {}
+    });
+    // you can change default conf but use sparingly and be absolutly sure
+    // you can add someting to your conf to use it in your loggerimpl
+    // ----------------------------
+    // STEP 6 : production use and noprint
+    logger4js.loadConf({
+        'default': {
+            noprint: true
+        }
+    });
+    clog2._1st('you can\'t see me');
+	logger4js.info('me neither');
+	log.error('not visible');
 });
