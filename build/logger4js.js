@@ -54,11 +54,14 @@ var DefaultLoggerImpl = (function() {
     return DefaultLoggerImpl;
 })(); 
 var mergeConf = function(no, oo) {
-    //var o = {};
+    var o = {};
+	for(var p in no){
+		o[p] = no[p];
+	}
     for (var p in oo) {
-        no[p] = no[p] || oo[p];
+        o[p] = no[p] || oo[p];
     }
-    return no;
+    return o;
 }; 
 /**
  * @module logger4js
@@ -69,27 +72,36 @@ var MainLogger = {
     loggers: {},
     named: function(name, options) {
         if (options != undefined) {
-            MainLogger.conf[name] = (MainLogger.conf[name] == undefined ? options: mergeConf(options, MainLogger.conf[name]));
+            var o = {};
+            o[name] = options;
+            MainLogger.loadConfiguration(o);
         }
         if (MainLogger.loggers[name] == undefined) {
-            if (MainLogger.conf[name] == undefined) {
-                new Logger({
-                    'name': name
-                });
-            } else {
-                new Logger(mergeConf(MainLogger.conf[name], {
-                    'name': name
-                }));
-            }
+            new Logger(MainLogger.getComputedConf(name, {
+                'name': name
+            }));
         }
         return MainLogger.loggers[name];
     },
     loadConfiguration: function(conf) {
         for (var n in conf) {
             var name = n;
-			var options = conf[n];
+            var options = conf[n];
             MainLogger.conf[name] = (MainLogger.conf[name] == undefined ? options: mergeConf(options, MainLogger.conf[name]));
         }
+    },
+    getComputedConf: function(name, moreoptions) {
+        var name_parts = name.split('.');
+        var cconf = {};
+        for (var i = 1; i <= name_parts.length; i++) {
+            var aname = name_parts.slice(0, i).join('.');
+            cconf = mergeConf((MainLogger.conf[aname] == undefined ? {}: MainLogger.conf[aname]), cconf);
+        }
+        if (moreoptions != undefined) {
+            cconf = mergeConf(moreoptions, cconf);
+        }
+        cconf = mergeConf(cconf, MainLogger.conf['default']);
+        return cconf;
     },
     conf: {
         'default': {
@@ -137,10 +149,9 @@ var Logger = (function() {
         } else {
             MainLogger.loggers[this.name] = this;
         }
-        var o = mergeConf(options, MainLogger.conf['default']);
-        this.loggerimpl = o.loggerimpl;
-        this.levels = (o.levels.lvls == undefined ? new Levels(o.levels) : o.levels);
-        this.actualLvl = (typeof o.actualLvl == 'number' ? o.actualLvl: this.levels[o.actualLvl]());
+        this.loggerimpl = options.loggerimpl;
+        this.levels = (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels);
+        this.actualLvl = (typeof options.actualLvl == 'number' ? options.actualLvl: this.levels[options.actualLvl]());
 
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
@@ -180,6 +191,14 @@ var Logger = (function() {
 	**/
     p.getConf = function() {
         return MainLogger.conf[this.name];
+    }
+	/**
+	* @description get the computed configuration of the logger - use this to know the real configuration
+	* @method getCConf
+	* @return {object} the real configuration of the logger
+	**/
+    p.getCConf = function() {
+        return MainLogger.getComputedConf(this.name);
     }
 
     return Logger;
@@ -242,7 +261,7 @@ var Levels = (function() {
     };
     return Levels;
 })(); 
-var log = new Logger({name:"DefaultLogger"});
+var log = MainLogger.named("DefaultLogger");
 
 for (var y in log){
 	exports[y] = log[y];

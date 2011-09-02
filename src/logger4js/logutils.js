@@ -1,7 +1,10 @@
 var mergeConf = function(no, oo) {
-    //var o = {};
+    var o = {};
+	for(var p in no){
+		o[p] = no[p];
+	}
     for (var p in oo) {
-        no[p] = no[p] || oo[p];
+        o[p] = no[p] || oo[p];
     }
-    return no;
+    return o;
 };

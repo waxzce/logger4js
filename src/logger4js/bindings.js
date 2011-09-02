@@ -1,4 +1,4 @@
-var log = new Logger({name:"DefaultLogger"});
+var log = MainLogger.named("DefaultLogger");
 
 for (var y in log){
 	exports[y] = log[y];

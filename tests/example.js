@@ -63,6 +63,7 @@ $(function() {
         var pp = AnnotherLoggerImpl.prototype;
         pp.initialize = function() {
             };
+		pp.loggerimplname = "custom";
         pp.log = function(what, lvl, obj, logger) {
             if (console != undefined) {
                 if (obj != null) {
@@ -96,5 +97,19 @@ $(function() {
             noprint: false // set to true to disable logging for this log (use for production)
         }
     };
+	// when you add some conf to a logger, default conf params are added
+	
+	logger4js.loadConf({
+        'app': {
+            actualLvl: 1
+        }
+    });
+	logger4js.loadConf({
+        'app.b': {
+            actualLvl: 2
+        }
+    });
+	console.log(logger4js.getComputedConf('app.customloggerimpl'));
+	console.log(logger4js.getComputedConf('app.d'));
 
 });

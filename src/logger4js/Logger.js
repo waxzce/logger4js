@@ -32,10 +32,9 @@ var Logger = (function() {
         } else {
             MainLogger.loggers[this.name] = this;
         }
-        var o = mergeConf(options, MainLogger.conf['default']);
-        this.loggerimpl = o.loggerimpl;
-        this.levels = (o.levels.lvls == undefined ? new Levels(o.levels) : o.levels);
-        this.actualLvl = (typeof o.actualLvl == 'number' ? o.actualLvl: this.levels[o.actualLvl]());
+        this.loggerimpl = options.loggerimpl;
+        this.levels = (options.levels.lvls == undefined ? new Levels(options.levels) : options.levels);
+        this.actualLvl = (typeof options.actualLvl == 'number' ? options.actualLvl: this.levels[options.actualLvl]());
 
         for (var f in this.levels) {
             this[f] = this._log_wrapper(this.levels[f]);
@@ -75,6 +74,14 @@ var Logger = (function() {
 	**/
     p.getConf = function() {
         return MainLogger.conf[this.name];
+    }
+	/**
+	* @description get the computed configuration of the logger - use this to know the real configuration
+	* @method getCConf
+	* @return {object} the real configuration of the logger
+	**/
+    p.getCConf = function() {
+        return MainLogger.getComputedConf(this.name);
     }
 
     return Logger;
