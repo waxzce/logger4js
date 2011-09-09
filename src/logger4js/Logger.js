@@ -103,10 +103,10 @@ var Logger = (function() {
     /**
 	* @description change current logger for another - private
 	* @param l {object} the new Logger
-	* @method switchwith
+	* @method replaceWith
 	* @private
 	**/
-    p.switchwith = function(l) {
+    p.replaceWith = function(l) {
         for (var f in this) {
             delete this[f];
         }

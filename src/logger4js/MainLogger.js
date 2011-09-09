@@ -26,7 +26,7 @@ var MainLogger = {
             var isdefault = (name == 'default');
             for (var l in MainLogger.loggers) {
                 if (l.indexOf(name) == 0 || isdefault) {
-                    MainLogger.loggers[l].switchwith(new Logger(MainLogger.getComputedConf(l, {
+                    MainLogger.loggers[l].replaceWith(new Logger(MainLogger.getComputedConf(l, {
                         'name': l
                     })));
                 }
